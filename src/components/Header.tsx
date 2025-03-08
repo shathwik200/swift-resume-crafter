@@ -7,10 +7,10 @@ import {
   Menu, 
   X, 
   ChevronDown,
-  FileTemplate,
   Info,
   MessageSquare,
-  Book
+  Book,
+  FileIcon
 } from "lucide-react";
 import { useState } from 'react';
 import {
@@ -96,7 +96,7 @@ const Header = () => {
           <div className="container space-y-3">
             <Button variant="ghost" size="sm" className="w-full justify-start" asChild>
               <Link to="/templates" onClick={() => setMobileMenuOpen(false)}>
-                <FileTemplate className="mr-2 h-4 w-4" />
+                <FileIcon className="mr-2 h-4 w-4" />
                 Templates
               </Link>
             </Button>
