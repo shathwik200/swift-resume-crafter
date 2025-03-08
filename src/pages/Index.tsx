@@ -1,7 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { FileText, Sparkles, Check, Target, Download } from "lucide-react";
+import { FileText, Sparkles, Check, Target, Download, Eye } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
