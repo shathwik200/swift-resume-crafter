@@ -9,7 +9,7 @@ export const exportToPdf = async (elementId: string, filename = "resume.pdf"): P
       throw new Error(`Element with ID "${elementId}" not found.`);
     }
 
-    // Clone the element to a hidden container for proper rendering
+    // Create a container with specific dimensions for proper PDF layout
     const container = document.createElement("div");
     container.style.position = "absolute";
     container.style.left = "-9999px";
@@ -23,19 +23,37 @@ export const exportToPdf = async (elementId: string, filename = "resume.pdf"): P
     clone.style.transform = "none";
     clone.style.width = "100%";
     clone.style.height = "auto";
+    clone.style.padding = "0";
+    clone.style.margin = "0";
     clone.style.overflow = "visible";
+    clone.style.boxShadow = "none";
+    
+    // Ensure proper alignment
+    const contentDiv = clone.querySelector("div");
+    if (contentDiv) {
+      contentDiv.style.padding = "0";
+      contentDiv.style.margin = "0";
+    }
     
     container.appendChild(clone);
     document.body.appendChild(container);
 
-    // Use html2canvas to render the cloned element
+    // Use html2canvas with better settings
     const canvas = await html2canvas(container, {
-      scale: 2, // Higher resolution
+      scale: 3, // Higher resolution
       useCORS: true,
       logging: false,
       allowTaint: true,
       backgroundColor: "white",
       windowWidth: 794, // Match A4 width
+      onclone: (documentClone) => {
+        // Additional adjustments to cloned document if needed
+        const resumeElement = documentClone.getElementById(elementId);
+        if (resumeElement) {
+          resumeElement.style.height = "auto";
+          resumeElement.style.width = "794px";
+        }
+      }
     });
 
     // Calculate PDF dimensions (using A4 size)

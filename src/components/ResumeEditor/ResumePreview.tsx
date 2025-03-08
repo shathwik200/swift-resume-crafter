@@ -1,4 +1,3 @@
-
 import { ResumeData, ResumeTemplate } from "@/types/resume";
 import { Phone, Mail, MapPin, Linkedin, Globe, User, Briefcase, GraduationCap, Award, Tags } from "lucide-react";
 
@@ -25,11 +24,10 @@ const ResumePreview = ({ data, template }: ResumePreviewProps) => {
   };
 
   return (
-    <div className="h-full overflow-auto flex items-center justify-center p-6 bg-gray-100">
+    <div className="h-full overflow-auto flex items-center justify-center py-8 px-4 bg-gray-100">
       <div 
         id="resume-container"
-        className="resume-paper w-[21cm] h-[29.7cm] bg-white shadow-md print:shadow-none max-w-full mx-auto overflow-hidden"
-        style={{ aspectRatio: '1 / 1.414' }}
+        className="resume-paper bg-white shadow-md print:shadow-none max-w-full mx-auto overflow-hidden"
       >
         <div className="h-full w-full p-8 print:p-0">
           <TemplateComponent />
