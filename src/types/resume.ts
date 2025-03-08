@@ -1,4 +1,3 @@
-
 export interface ResumeData {
   profile: {
     name: string;
@@ -72,6 +71,13 @@ export enum ResumeTemplate {
   MINIMAL = "Minimal",
   CREATIVE = "Creative",
   EXECUTIVE = "Executive",
+  TECHNICAL = "Technical",
+  ACADEMIC = "Academic",
+  STARTUP = "Startup",
+  COMPACT = "Compact",
+  ELEGANT = "Elegant",
+  CLASSIC = "Classic",
+  CONTEMPORARY = "Contemporary"
 }
 
 export interface ATSScore {

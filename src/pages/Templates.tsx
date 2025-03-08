@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -10,7 +9,7 @@ import { ResumeTemplate } from "@/types/resume";
 
 const Templates = () => {
   const [hoveredTemplate, setHoveredTemplate] = useState<string | null>(null);
-  
+
   const templates = [
     {
       id: "modern",
@@ -83,13 +82,49 @@ const Templates = () => {
       popular: true,
       template: ResumeTemplate.CREATIVE,
       color: "bg-gradient-to-br from-violet-50 to-purple-50"
+    },
+    {
+      id: "compact",
+      name: "Compact",
+      description: "Space-efficient design that fits more content while maintaining readability.",
+      image: "/templates/compact.png",
+      popular: false,
+      template: ResumeTemplate.COMPACT,
+      color: "bg-gradient-to-br from-sky-50 to-blue-50"
+    },
+    {
+      id: "elegant",
+      name: "Elegant",
+      description: "Sophisticated design with refined typography and balanced spacing.",
+      image: "/templates/elegant.png",
+      popular: true,
+      template: ResumeTemplate.ELEGANT,
+      color: "bg-gradient-to-br from-violet-50 to-purple-50"
+    },
+    {
+      id: "classic",
+      name: "Classic",
+      description: "Traditional chronological format trusted by recruiters worldwide.",
+      image: "/templates/classic.png",
+      popular: false,
+      template: ResumeTemplate.CLASSIC,
+      color: "bg-gradient-to-br from-stone-50 to-neutral-100"
+    },
+    {
+      id: "contemporary",
+      name: "Contemporary",
+      description: "Modern take on traditional resume with clean lines and smart spacing.",
+      image: "/templates/contemporary.png",
+      popular: false,
+      template: ResumeTemplate.CONTEMPORARY,
+      color: "bg-gradient-to-br from-emerald-50 to-teal-50"
     }
   ];
 
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      
+
       <main className="flex-1 py-12 px-4">
         <div className="container mx-auto">
           <div className="text-center mb-10">
@@ -97,18 +132,17 @@ const Templates = () => {
               Professional Resume Templates
             </h1>
             <p className="text-lg text-resume-slate max-w-3xl mx-auto">
-              Choose from our professionally designed templates. Each template is ATS-optimized 
+              Choose from our professionally designed templates. Each template is ATS-optimized
               and customizable to match your personal style.
             </p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {templates.map((template) => (
-              <Card 
+              <Card
                 key={template.id}
-                className={`overflow-hidden transition-all duration-200 hover:shadow-lg card-hover ${
-                  hoveredTemplate === template.id ? 'ring-2 ring-resume-teal' : ''
-                }`}
+                className={`overflow-hidden transition-all duration-200 hover:shadow-lg card-hover ${hoveredTemplate === template.id ? 'ring-2 ring-resume-teal' : ''
+                  }`}
                 onMouseEnter={() => setHoveredTemplate(template.id)}
                 onMouseLeave={() => setHoveredTemplate(null)}
               >
@@ -123,17 +157,17 @@ const Templates = () => {
                     )}
                   </div>
                 </div>
-                
+
                 <CardHeader className="pb-2">
                   <CardTitle className="flex items-center justify-between">
                     {template.name}
                   </CardTitle>
                 </CardHeader>
-                
+
                 <CardContent className="pb-2">
                   <p className="text-sm text-resume-slate">{template.description}</p>
                 </CardContent>
-                
+
                 <CardFooter className="flex justify-between pt-2">
                   <Button
                     variant="outline"
@@ -146,7 +180,7 @@ const Templates = () => {
                       Select
                     </Link>
                   </Button>
-                  
+
                   <Button
                     size="sm"
                     className="bg-resume-teal hover:bg-resume-teal/90"
@@ -163,7 +197,7 @@ const Templates = () => {
           </div>
         </div>
       </main>
-      
+
       <Footer />
     </div>
   );
