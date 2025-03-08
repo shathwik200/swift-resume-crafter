@@ -102,9 +102,26 @@
 
 /* Custom styling for resume preview paper look */
 .resume-paper {
-  @apply bg-white shadow-lg;
-  aspect-ratio: 8.5/11;
-  max-height: 100%;
+  @apply bg-white shadow-lg overflow-hidden;
+  aspect-ratio: 1 / 1.414; /* A4 paper ratio */
+  page-break-inside: avoid;
+  box-sizing: border-box;
+}
+
+@media print {
+  .resume-paper {
+    width: 210mm !important;
+    height: 297mm !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+  }
+}
+
+/* For PDF export optimization */
+#resume-container {
+  box-sizing: border-box;
+  page-break-inside: avoid;
 }
 
 /* Resume section styling */
