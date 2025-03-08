@@ -156,6 +156,36 @@ const ModernTemplate = ({ data }: { data: ResumeData }) => {
           </div>
         </div>
       )}
+
+      {/* Projects */}
+      {data.projects && data.projects.length > 0 && (
+        <div className="mb-6">
+          <h3 className="text-lg font-semibold text-resume-navy border-b border-resume-navy pb-1 mb-2">
+            Projects
+          </h3>
+          {data.projects.map((project) => (
+            <div key={project.id} className="mb-4">
+              <h4 className="text-base font-semibold">{project.name}</h4>
+              <p className="text-sm">{project.description}</p>
+              {project.technologies.length > 0 && (
+                <p className="text-sm"><strong>Technologies:</strong> {project.technologies.join(', ')}</p>
+              )}
+              {project.url && (
+                <p className="text-sm">
+                  <a href={project.url} target="_blank" rel="noopener noreferrer">
+                    {project.url}
+                  </a>
+                </p>
+              )}
+              {(project.startDate || project.endDate) && (
+                <p className="text-sm">
+                  {project.startDate} {project.startDate && project.endDate && ' - '} {project.endDate}
+                </p>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
@@ -359,6 +389,34 @@ const MinimalTemplate = ({ data }: { data: ResumeData }) => (
         </p>
       </div>
     )}
+
+    {/* Projects */}
+    {data.projects && data.projects.length > 0 && (
+      <div className="mb-6">
+        <h3 className="text-md uppercase text-gray-500 tracking-wider mb-2">Projects</h3>
+        {data.projects.map((project) => (
+          <div key={project.id} className="mb-4">
+            <h4 className="text-base font-medium">{project.name}</h4>
+            <p className="text-sm">{project.description}</p>
+            {project.technologies.length > 0 && (
+              <p className="text-sm"><strong>Technologies:</strong> {project.technologies.join(', ')}</p>
+            )}
+            {project.url && (
+              <p className="text-sm">
+                <a href={project.url} target="_blank" rel="noopener noreferrer">
+                  {project.url}
+                </a>
+              </p>
+            )}
+            {(project.startDate || project.endDate) && (
+              <p className="text-sm">
+                {project.startDate} {project.startDate && project.endDate && ' - '} {project.endDate}
+              </p>
+            )}
+          </div>
+        ))}
+      </div>
+    )}
   </div>
 );
 
@@ -471,6 +529,36 @@ const CreativeTemplate = ({ data }: { data: ResumeData }) => (
         )}
       </div>
     </div>
+
+    {/* Projects */}
+    {data.projects && data.projects.length > 0 && (
+      <div className="mb-6">
+        <h3 className="text-lg font-bold text-purple-600 mb-3 border-b border-purple-200 pb-1">
+          Projects
+        </h3>
+        {data.projects.map((project) => (
+          <div key={project.id} className="mb-4">
+            <h4 className="text-base font-semibold">{project.name}</h4>
+            <p className="text-sm">{project.description}</p>
+            {project.technologies.length > 0 && (
+              <p className="text-sm"><strong>Technologies:</strong> {project.technologies.join(', ')}</p>
+            )}
+            {project.url && (
+              <p className="text-sm">
+                <a href={project.url} target="_blank" rel="noopener noreferrer">
+                  {project.url}
+                </a>
+              </p>
+            )}
+            {(project.startDate || project.endDate) && (
+              <p className="text-sm">
+                {project.startDate} {project.startDate && project.endDate && ' - '} {project.endDate}
+              </p>
+            )}
+          </div>
+        ))}
+      </div>
+    )}
   </div>
 );
 
@@ -576,6 +664,34 @@ const ExecutiveTemplate = ({ data }: { data: ResumeData }) => (
         </div>
       )}
     </div>
+
+    {/* Projects */}
+    {data.projects && data.projects.length > 0 && (
+      <div className="mb-6">
+        <h3 className="text-lg font-bold mb-4 uppercase tracking-wider">Projects</h3>
+        {data.projects.map((project) => (
+          <div key={project.id} className="mb-5">
+            <h4 className="text-base font-semibold">{project.name}</h4>
+            <p className="text-sm">{project.description}</p>
+            {project.technologies.length > 0 && (
+              <p className="text-sm"><strong>Technologies:</strong> {project.technologies.join(', ')}</p>
+            )}
+            {project.url && (
+              <p className="text-sm">
+                <a href={project.url} target="_blank" rel="noopener noreferrer">
+                  {project.url}
+                </a>
+              </p>
+            )}
+            {(project.startDate || project.endDate) && (
+              <p className="text-sm">
+                {project.startDate} {project.startDate && project.endDate && ' - '} {project.endDate}
+              </p>
+            )}
+          </div>
+        ))}
+      </div>
+    )}
   </div>
 );
 

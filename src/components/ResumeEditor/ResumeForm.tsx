@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { ResumeData } from "@/types/resume";
 import { Button } from "@/components/ui/button";
@@ -102,6 +101,40 @@ const ResumeForm = ({ resumeData, onChange }: ResumeFormProps) => {
     onChange({
       ...resumeData,
       skills: skillsArray,
+    });
+  };
+
+  // Projects handlers
+  const addProject = () => {
+    const newProject = {
+      id: uuidv4(),
+      name: "Project Name",
+      description: "Project Description",
+      technologies: [] as string[],
+      url: "",
+      startDate: "",
+      endDate: ""
+    };
+
+    onChange({
+      ...resumeData,
+      projects: [...(resumeData.projects || []), newProject],
+    });
+  };
+
+  const updateProject = (id: string, field: string, value: any) => {
+    onChange({
+      ...resumeData,
+      projects: (resumeData.projects || []).map((proj) =>
+        proj.id === id ? { ...proj, [field]: value } : proj
+      ),
+    });
+  };
+
+  const deleteProject = (id: string) => {
+    onChange({
+      ...resumeData,
+      projects: (resumeData.projects || []).filter((proj) => proj.id !== id),
     });
   };
 
@@ -358,6 +391,91 @@ const ResumeForm = ({ resumeData, onChange }: ResumeFormProps) => {
                 className="min-h-[100px]"
               />
             </div>
+          </AccordionContent>
+        </AccordionItem>
+
+        {/* Projects Section */}
+        <AccordionItem value="projects" className="border rounded-md mt-2">
+          <AccordionTrigger className="px-4 py-2 flex items-center">
+            <Award className="h-5 w-5 mr-2 text-resume-navy" />
+            <span>Projects</span>
+          </AccordionTrigger>
+          <AccordionContent className="p-4 space-y-4">
+            {(resumeData.projects || []).map((proj) => (
+              <div key={proj.id} className="mb-6 p-4 border rounded-md relative">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="absolute top-2 right-2 text-resume-slate/60 hover:text-resume-error"
+                  onClick={() => deleteProject(proj.id)}
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label>Project Name</Label>
+                    <Input
+                      value={proj.name}
+                      onChange={(e) => updateProject(proj.id, "name", e.target.value)}
+                      placeholder="Project Name"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Description</Label>
+                    <Textarea
+                      value={proj.description}
+                      onChange={(e) => updateProject(proj.id, "description", e.target.value)}
+                      placeholder="Project Description"
+                      className="min-h-[80px]"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Technologies (comma separated)</Label>
+                    <Input
+                      value={proj.technologies.join(', ')}
+                      onChange={(e) =>
+                        updateProject(proj.id, "technologies", e.target.value.split(',').map(s => s.trim()).filter(Boolean))
+                      }
+                      placeholder="e.g. React, Node.js"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>URL (optional)</Label>
+                    <Input
+                      value={proj.url || ''}
+                      onChange={(e) => updateProject(proj.id, "url", e.target.value)}
+                      placeholder="https://github.com/..."
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label>Start Date</Label>
+                      <Input
+                        type="date"
+                        value={proj.startDate || ''}
+                        onChange={(e) => updateProject(proj.id, "startDate", e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>End Date</Label>
+                      <Input
+                        type="date"
+                        value={proj.endDate || ''}
+                        onChange={(e) => updateProject(proj.id, "endDate", e.target.value)}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+            <Button
+              variant="outline"
+              className="w-full mt-2 border-dashed"
+              onClick={addProject}
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              Add Project
+            </Button>
           </AccordionContent>
         </AccordionItem>
       </Accordion>

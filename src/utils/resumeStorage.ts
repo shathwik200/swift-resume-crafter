@@ -1,4 +1,3 @@
-
 import { ResumeData, ResumeTemplate } from "@/types/resume";
 
 const STORAGE_KEY = "resumeai_data";
@@ -105,5 +104,6 @@ export const getDefaultResumeData = (): ResumeData => {
       "Problem Solving",
       "Team Leadership"
     ],
+    projects: [],
   };
 };
