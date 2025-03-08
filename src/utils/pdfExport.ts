@@ -1,4 +1,3 @@
-
 import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
 
@@ -17,7 +16,7 @@ export const exportToPdf = async (elementId: string, filename = "resume.pdf"): P
     // Set fixed width to match A4 paper ratio
     container.style.width = "794px"; // A4 width in pixels at 96 DPI
     container.style.backgroundColor = "white";
-    
+
     // Clone the node to avoid modifying the original
     const clone = element.cloneNode(true) as HTMLElement;
     clone.style.transform = "none";
@@ -27,14 +26,14 @@ export const exportToPdf = async (elementId: string, filename = "resume.pdf"): P
     clone.style.margin = "0";
     clone.style.overflow = "visible";
     clone.style.boxShadow = "none";
-    
+
     // Ensure proper alignment
     const contentDiv = clone.querySelector("div");
     if (contentDiv) {
       contentDiv.style.padding = "0";
       contentDiv.style.margin = "0";
     }
-    
+
     container.appendChild(clone);
     document.body.appendChild(container);
 
@@ -56,38 +55,36 @@ export const exportToPdf = async (elementId: string, filename = "resume.pdf"): P
       }
     });
 
-    // Calculate PDF dimensions (using A4 size)
-    const imgWidth = 210; // A4 width in mm
-    const pageHeight = 297; // A4 height in mm
-    const imgHeight = (canvas.height * imgWidth) / canvas.width;
-    
+    // Calculate PDF dimensions with margin support for A4 (210 x 297 mm)
+    const margin = 10; // margin in mm
+    const availableWidth = 210 - 2 * margin;
+    const imgWidth = availableWidth;
+    const imgHeight = (canvas.height * availableWidth) / canvas.width;
+
     // Create the PDF with A4 dimensions
     const pdf = new jsPDF({
       orientation: "portrait",
       unit: "mm",
       format: "a4",
     });
-    
-    // Add the image to the PDF
-    const imgData = canvas.toDataURL("image/png");
-    
-    // Handle multi-page if resume is longer than A4
-    let heightLeft = imgHeight;
-    let position = 0;
-    pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-    heightLeft -= pageHeight;
 
-    // Add additional pages if needed
-    while (heightLeft > 0) {
-      position = -pageHeight * (imgHeight - heightLeft) / imgHeight;
-      pdf.addPage();
-      pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-      heightLeft -= pageHeight;
+    const imgData = canvas.toDataURL("image/png");
+
+    // Use a loop to handle multi-page PDF export with proper margin alignment.
+    let printedHeight = 0;
+    while (printedHeight < imgHeight) {
+      if (printedHeight > 0) {
+        pdf.addPage();
+      }
+      // Calculate y-offset so that the image starts at the defined margin on the first page
+      const pageOffset = margin - printedHeight;
+      pdf.addImage(imgData, "PNG", margin, pageOffset, imgWidth, imgHeight);
+      printedHeight += (297 - 2 * margin);
     }
-    
+
     // Save the PDF
     pdf.save(filename);
-    
+
     // Clean up
     document.body.removeChild(container);
   } catch (error) {
