@@ -66,14 +66,21 @@ export const exportToPdf = async (elementId: string, filename: string): Promise<
     // Add content to the PDF
     const canvasDataUrl = canvas.toDataURL('image/png');
     
-    // Standard parameters for addImage
+    // For jsPDF versions that support the crop parameters
+    // We need to use the positional parameters since the object format has TypeScript issues
     pdf.addImage(
-      canvasDataUrl, 
-      'PNG', 
-      0, // X position
-      0, // Y position (always start at top of new page)
-      imgWidth, 
-      heightOnThisPage
+      canvasDataUrl,     // imageData
+      'PNG',             // format
+      0,                 // x
+      0,                 // y
+      imgWidth,          // width
+      heightOnThisPage,  // height
+      '',                // alias
+      'FAST',            // compression
+      0,                 // rotation
+      srcY,              // srcY - vertical offset in the source image
+      canvas.width,      // srcWidth - width of the source image
+      srcHeight          // srcHeight - height of the source image segment
     );
     
     // Update position and remaining height
