@@ -63,22 +63,22 @@ export const exportToPdf = async (elementId: string, filename: string): Promise<
     const srcY = position / imgHeight * canvas.height;
     const srcHeight = heightOnThisPage / imgHeight * canvas.height;
     
-    // Add content to the PDF
+    // Add content to the PDF - fixing the parameter count issue
     const canvasDataUrl = canvas.toDataURL('image/png');
-    pdf.addImage(
-      canvasDataUrl,
-      'PNG',
-      0, // X position
-      0, // Y position (always start at top of new page)
-      imgWidth,
-      heightOnThisPage,
-      undefined, // No alias
-      'FAST', // Compression
-      0, // Rotation
-      srcY, // Source Y position in the canvas
-      canvas.width, // Source width
-      srcHeight // Source height
-    );
+    pdf.addImage({
+      imageData: canvasDataUrl,
+      format: 'PNG',
+      x: 0, // X position
+      y: 0, // Y position (always start at top of new page)
+      width: imgWidth,
+      height: heightOnThisPage,
+      compression: 'FAST',
+      rotation: 0,
+      srcX: 0,
+      srcY: srcY,
+      srcWidth: canvas.width,
+      srcHeight: srcHeight
+    });
     
     // Update position and remaining height
     position += heightOnThisPage;

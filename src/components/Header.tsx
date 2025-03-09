@@ -5,7 +5,7 @@ import {
   FileText,
   Home,
   BookOpen,
-  FileSparkles,
+  Sparkles,
   Menu,
   X,
   Info,
@@ -24,7 +24,7 @@ const navigation = [
   { name: "Home", href: "/", icon: <Home className="h-4 w-4 mr-2" /> },
   { name: "Resume Builder", href: "/builder", icon: <FileText className="h-4 w-4 mr-2" /> },
   { name: "Templates", href: "/templates", icon: <BookOpen className="h-4 w-4 mr-2" /> },
-  { name: "ATS Tips", href: "/tips", icon: <FileSparkles className="h-4 w-4 mr-2" /> },
+  { name: "ATS Tips", href: "/tips", icon: <Sparkles className="h-4 w-4 mr-2" /> },
   { name: "About", href: "/about", icon: <Info className="h-4 w-4 mr-2" /> },
 ];
 
