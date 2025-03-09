@@ -1,94 +1,90 @@
-import html2canvas from "html2canvas";
-import { jsPDF } from "jspdf";
 
-export const exportToPdf = async (elementId: string, filename = "resume.pdf"): Promise<void> => {
-  try {
-    const element = document.getElementById(elementId);
-    if (!element) {
-      throw new Error(`Element with ID "${elementId}" not found.`);
-    }
+import html2canvas from 'html2canvas';
+import { jsPDF } from 'jspdf';
 
-    // Create a container with specific dimensions for proper PDF layout
-    const container = document.createElement("div");
-    container.style.position = "absolute";
-    container.style.left = "-9999px";
-    container.style.top = "0";
-    // Set fixed width to match A4 paper ratio
-    container.style.width = "794px"; // A4 width in pixels at 96 DPI
-    container.style.backgroundColor = "white";
-
-    // Clone the node to avoid modifying the original
-    const clone = element.cloneNode(true) as HTMLElement;
-    clone.style.transform = "none";
-    clone.style.width = "100%";
-    clone.style.height = "auto";
-    clone.style.padding = "0";
-    clone.style.margin = "0";
-    clone.style.overflow = "visible";
-    clone.style.boxShadow = "none";
-
-    // Ensure proper alignment
-    const contentDiv = clone.querySelector("div");
-    if (contentDiv) {
-      contentDiv.style.padding = "0";
-      contentDiv.style.margin = "0";
-    }
-
-    container.appendChild(clone);
-    document.body.appendChild(container);
-
-    // Use html2canvas with better settings
-    const canvas = await html2canvas(container, {
-      scale: 3, // Higher resolution
-      useCORS: true,
-      logging: false,
-      allowTaint: true,
-      backgroundColor: "white",
-      windowWidth: 794, // Match A4 width
-      onclone: (documentClone) => {
-        // Additional adjustments to cloned document if needed
-        const resumeElement = documentClone.getElementById(elementId);
-        if (resumeElement) {
-          resumeElement.style.height = "auto";
-          resumeElement.style.width = "794px";
-        }
-      }
-    });
-
-    // Calculate PDF dimensions with margin support for A4 (210 x 297 mm)
-    const margin = 10; // margin in mm
-    const availableWidth = 210 - 2 * margin;
-    const imgWidth = availableWidth;
-    const imgHeight = (canvas.height * availableWidth) / canvas.width;
-
-    // Create the PDF with A4 dimensions
-    const pdf = new jsPDF({
-      orientation: "portrait",
-      unit: "mm",
-      format: "a4",
-    });
-
-    const imgData = canvas.toDataURL("image/png");
-
-    // Use a loop to handle multi-page PDF export with proper margin alignment.
-    let printedHeight = 0;
-    while (printedHeight < imgHeight) {
-      if (printedHeight > 0) {
-        pdf.addPage();
-      }
-      // Calculate y-offset so that the image starts at the defined margin on the first page
-      const pageOffset = margin - printedHeight;
-      pdf.addImage(imgData, "PNG", margin, pageOffset, imgWidth, imgHeight);
-      printedHeight += (297 - 2 * margin);
-    }
-
-    // Save the PDF
-    pdf.save(filename);
-
-    // Clean up
-    document.body.removeChild(container);
-  } catch (error) {
-    console.error("Error exporting to PDF:", error);
-    throw error;
+export const exportToPdf = async (elementId: string, filename: string): Promise<void> => {
+  const element = document.getElementById(elementId);
+  
+  if (!element) {
+    throw new Error(`Element with ID ${elementId} not found`);
   }
+  
+  // Apply specific styling for PDF export
+  const originalStyle = element.style.cssText;
+  element.style.width = '794px'; // 21cm in pixels at 96 dpi - A4 width
+  element.style.height = 'auto';
+  element.style.overflow = 'hidden';
+  element.style.backgroundColor = 'white';
+  
+  // Get the actual height of the content
+  const scrollHeight = element.scrollHeight;
+  
+  // Create canvas with high resolution
+  const canvas = await html2canvas(element, {
+    scale: 2, // Higher scale for better quality
+    useCORS: true,
+    logging: false,
+    allowTaint: true,
+    backgroundColor: '#ffffff',
+    windowWidth: 1200, // Simulate a desktop viewport
+    windowHeight: scrollHeight,
+  });
+  
+  // Reset the original style
+  element.style.cssText = originalStyle;
+  
+  // A4 measurements in mm for jsPDF
+  const a4Width = 210;
+  const a4Height = 297;
+  
+  // Create PDF with A4 dimensions
+  const pdf = new jsPDF({
+    orientation: 'portrait',
+    unit: 'mm',
+    format: 'a4',
+  });
+  
+  // Calculate dimensions to fit the A4 page properly
+  const imgWidth = a4Width;
+  const imgHeight = (canvas.height * imgWidth) / canvas.width;
+  
+  // If content exceeds one page, create multiple pages
+  let position = 0;
+  let remainingHeight = imgHeight;
+  
+  while (remainingHeight > 0) {
+    // For pages after the first one
+    if (position > 0) {
+      pdf.addPage();
+    }
+    
+    // Calculate how much of the canvas to render on the current page
+    const heightOnThisPage = Math.min(remainingHeight, a4Height);
+    const srcY = position / imgHeight * canvas.height;
+    const srcHeight = heightOnThisPage / imgHeight * canvas.height;
+    
+    // Add content to the PDF
+    const canvasDataUrl = canvas.toDataURL('image/png');
+    pdf.addImage(
+      canvasDataUrl,
+      'PNG',
+      0, // X position
+      0, // Y position (always start at top of new page)
+      imgWidth,
+      heightOnThisPage,
+      undefined, // No alias
+      'FAST', // Compression
+      0, // Rotation
+      srcY, // Source Y position in the canvas
+      canvas.width, // Source width
+      srcHeight // Source height
+    );
+    
+    // Update position and remaining height
+    position += heightOnThisPage;
+    remainingHeight -= a4Height;
+  }
+  
+  // Save the PDF
+  pdf.save(filename);
 };

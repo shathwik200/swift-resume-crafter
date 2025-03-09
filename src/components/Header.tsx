@@ -1,15 +1,16 @@
+
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import {
   FileText,
-  Download,
+  Home,
+  BookOpen,
+  FileSparkles,
   Menu,
   X,
-  ChevronDown,
   Info,
-  MessageSquare,
-  Book,
-  FileIcon
+  Shield,
+  FileCheck
 } from "lucide-react";
 import { useState } from 'react';
 import {
@@ -20,13 +21,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 const navigation = [
-  { name: "Home", href: "/" },
-  { name: "Build Resume", href: "/builder" },
-  { name: "Templates", href: "/templates" },
-  { name: "ATS Tips", href: "/tips" },
-  { name: "About", href: "/about" },
-  { name: "Privacy", href: "/privacy" },
-  { name: "Terms", href: "/terms" },
+  { name: "Home", href: "/", icon: <Home className="h-4 w-4 mr-2" /> },
+  { name: "Resume Builder", href: "/builder", icon: <FileText className="h-4 w-4 mr-2" /> },
+  { name: "Templates", href: "/templates", icon: <BookOpen className="h-4 w-4 mr-2" /> },
+  { name: "ATS Tips", href: "/tips", icon: <FileSparkles className="h-4 w-4 mr-2" /> },
+  { name: "About", href: "/about", icon: <Info className="h-4 w-4 mr-2" /> },
 ];
 
 const Header = () => {
@@ -37,20 +36,23 @@ const Header = () => {
   };
 
   return (
-    <header className="w-full border-b bg-white">
-      <div className="container flex h-16 items-center justify-between">
+    <header className="sticky top-0 w-full border-b bg-white shadow-sm z-50">
+      <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <div className="flex items-center gap-2">
           <FileText className="h-6 w-6 text-resume-teal" />
-          <Link to="/" className="font-heading text-xl font-bold">
+          <Link to="/" className="font-heading text-xl font-bold text-resume-navy">
             ResumeAI
           </Link>
         </div>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center space-x-2">
+        <nav className="hidden md:flex items-center space-x-1">
           {navigation.map((item) => (
-            <Button key={item.name} variant="ghost" size="sm" asChild>
-              <Link to={item.href}>{item.name}</Link>
+            <Button key={item.name} variant="ghost" size="sm" asChild className="font-medium">
+              <Link to={item.href}>
+                {item.icon}
+                {item.name}
+              </Link>
             </Button>
           ))}
         </nav>
@@ -79,15 +81,26 @@ const Header = () => {
       {/* Mobile Menu */}
       {mobileMenuOpen && (
         <div className="md:hidden bg-white border-t py-4 animate-fade-in">
-          <div className="container space-y-3">
+          <div className="container space-y-3 px-4">
             {navigation.map((item) => (
               <Button key={item.name} variant="ghost" size="sm" className="w-full justify-start" asChild>
                 <Link to={item.href} onClick={() => setMobileMenuOpen(false)}>
-                  <FileIcon className="mr-2 h-4 w-4" />
+                  {item.icon}
                   {item.name}
                 </Link>
               </Button>
             ))}
+            <div className="pt-2">
+              <Button
+                className="w-full bg-resume-teal hover:bg-resume-teal/90 text-white"
+                asChild
+              >
+                <Link to="/builder" onClick={() => setMobileMenuOpen(false)}>
+                  <FileCheck className="mr-2 h-4 w-4" />
+                  Create Resume
+                </Link>
+              </Button>
+            </div>
           </div>
         </div>
       )}

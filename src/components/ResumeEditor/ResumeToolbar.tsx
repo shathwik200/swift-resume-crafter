@@ -3,11 +3,11 @@ import { Button } from "@/components/ui/button";
 import {
   Download,
   FileText,
-  Zap,
-  Eye,
+  Sparkles,
+  RotateCcw,
+  PanelTop,
   Settings,
-  RefreshCw,
-  Sparkles
+  CheckCheck
 } from "lucide-react";
 import { 
   Select,
@@ -38,14 +38,14 @@ const ResumeToolbar = ({
   onExport
 }: ResumeToolbarProps) => {
   return (
-    <div className="flex items-center justify-between p-2 border-b">
+    <div className="flex items-center justify-between p-3 border-b bg-muted/20">
       <div className="flex items-center gap-2">
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" size="sm">
-                <RefreshCw className="h-4 w-4 mr-1" />
-                <span className="hidden sm:inline">Reset</span>
+              <Button variant="outline" size="sm" className="h-9">
+                <RotateCcw className="h-4 w-4 mr-1.5" />
+                <span>Reset</span>
               </Button>
             </TooltipTrigger>
             <TooltipContent>
@@ -58,15 +58,17 @@ const ResumeToolbar = ({
           value={template} 
           onValueChange={(value) => onTemplateChange(value as ResumeTemplate)}
         >
-          <SelectTrigger className="w-[160px]">
+          <SelectTrigger className="w-[180px] h-9">
+            <PanelTop className="h-4 w-4 mr-2 text-gray-500" />
             <SelectValue placeholder="Select template" />
           </SelectTrigger>
           <SelectContent>
-            {Object.values(ResumeTemplate).map((tmpl) => (
-              <SelectItem key={tmpl} value={tmpl}>
-                {tmpl}
-              </SelectItem>
-            ))}
+            <SelectItem value={ResumeTemplate.MODERN}>Modern</SelectItem>
+            <SelectItem value={ResumeTemplate.PROFESSIONAL}>Professional</SelectItem>
+            <SelectItem value={ResumeTemplate.MINIMAL}>Minimal</SelectItem>
+            <SelectItem value={ResumeTemplate.TECHNICAL}>Technical</SelectItem>
+            <SelectItem value={ResumeTemplate.CREATIVE}>Creative</SelectItem>
+            <SelectItem value={ResumeTemplate.EXECUTIVE}>Executive</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -75,9 +77,9 @@ const ResumeToolbar = ({
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="outline" size="sm" onClick={onAIOptimize}>
-                <Sparkles className="h-4 w-4 mr-1 text-yellow-500" />
-                <span className="hidden sm:inline">AI Optimize</span>
+              <Button variant="outline" size="sm" onClick={onAIOptimize} className="h-9 border-dashed border-yellow-400">
+                <Sparkles className="h-4 w-4 mr-1.5 text-yellow-500" />
+                <span className="text-resume-navy">AI Optimize</span>
               </Button>
             </TooltipTrigger>
             <TooltipContent>
@@ -90,12 +92,12 @@ const ResumeToolbar = ({
           <Tooltip>
             <TooltipTrigger asChild>
               <Button 
-                className="bg-resume-teal hover:bg-resume-teal/90 text-white" 
+                className="bg-resume-teal hover:bg-resume-teal/90 text-white h-9" 
                 size="sm"
                 onClick={onExport}
               >
-                <Download className="h-4 w-4 mr-1" />
-                <span className="hidden sm:inline">Export PDF</span>
+                <Download className="h-4 w-4 mr-1.5" />
+                <span>Export PDF</span>
               </Button>
             </TooltipTrigger>
             <TooltipContent>

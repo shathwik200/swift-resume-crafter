@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ResumeData } from "@/types/resume";
+import { ResumeData, Language } from "@/types/resume";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -9,6 +9,13 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Plus, Trash2, GraduationCap, Briefcase, UserCircle, Code, Award, Globe } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { v4 as uuidv4 } from "uuid";
@@ -104,7 +111,6 @@ const ResumeForm = ({ resumeData, onChange }: ResumeFormProps) => {
     });
   };
 
-  // Projects handlers
   const addProject = () => {
     const newProject = {
       id: uuidv4(),
@@ -138,10 +144,45 @@ const ResumeForm = ({ resumeData, onChange }: ResumeFormProps) => {
     });
   };
 
+  const addLanguage = () => {
+    const newLanguage: Language = {
+      name: "Language",
+      proficiency: "Intermediate"
+    };
+    
+    onChange({
+      ...resumeData,
+      languages: [...(resumeData.languages || []), newLanguage]
+    });
+  };
+  
+  const updateLanguage = (index: number, field: string, value: any) => {
+    const updatedLanguages = [...(resumeData.languages || [])];
+    updatedLanguages[index] = {
+      ...updatedLanguages[index],
+      [field]: value
+    };
+    
+    onChange({
+      ...resumeData,
+      languages: updatedLanguages
+    });
+  };
+  
+  const deleteLanguage = (index: number) => {
+    const updatedLanguages = [...(resumeData.languages || [])];
+    updatedLanguages.splice(index, 1);
+    
+    onChange({
+      ...resumeData,
+      languages: updatedLanguages
+    });
+  };
+
   return (
-    <div className="h-full overflow-y-auto p-4 space-y-6">
+    <div className="h-full overflow-y-auto p-4 space-y-4">
       <Accordion type="single" collapsible defaultValue="profile" className="w-full">
-        <AccordionItem value="profile" className="border rounded-md">
+        <AccordionItem value="profile" className="border rounded-md shadow-sm">
           <AccordionTrigger className="px-4 py-2 flex items-center">
             <UserCircle className="h-5 w-5 mr-2 text-resume-navy" />
             <span>Personal Information</span>
@@ -217,14 +258,14 @@ const ResumeForm = ({ resumeData, onChange }: ResumeFormProps) => {
           </AccordionContent>
         </AccordionItem>
 
-        <AccordionItem value="experience" className="border rounded-md mt-2">
+        <AccordionItem value="experience" className="border rounded-md shadow-sm mt-2">
           <AccordionTrigger className="px-4 py-2 flex items-center">
             <Briefcase className="h-5 w-5 mr-2 text-resume-navy" />
             <span>Work Experience</span>
           </AccordionTrigger>
           <AccordionContent className="p-4">
             {resumeData.experience.map((exp, index) => (
-              <div key={exp.id} className="mb-6 p-4 border rounded-md relative">
+              <div key={exp.id} className="mb-6 p-4 border rounded-md relative bg-white shadow-sm">
                 <Button
                   variant="ghost"
                   size="icon"
@@ -293,14 +334,14 @@ const ResumeForm = ({ resumeData, onChange }: ResumeFormProps) => {
           </AccordionContent>
         </AccordionItem>
 
-        <AccordionItem value="education" className="border rounded-md mt-2">
+        <AccordionItem value="education" className="border rounded-md shadow-sm mt-2">
           <AccordionTrigger className="px-4 py-2 flex items-center">
             <GraduationCap className="h-5 w-5 mr-2 text-resume-navy" />
             <span>Education</span>
           </AccordionTrigger>
           <AccordionContent className="p-4">
             {resumeData.education.map((edu) => (
-              <div key={edu.id} className="mb-6 p-4 border rounded-md relative">
+              <div key={edu.id} className="mb-6 p-4 border rounded-md relative bg-white shadow-sm">
                 <Button
                   variant="ghost"
                   size="icon"
@@ -375,7 +416,7 @@ const ResumeForm = ({ resumeData, onChange }: ResumeFormProps) => {
           </AccordionContent>
         </AccordionItem>
 
-        <AccordionItem value="skills" className="border rounded-md mt-2">
+        <AccordionItem value="skills" className="border rounded-md shadow-sm mt-2">
           <AccordionTrigger className="px-4 py-2 flex items-center">
             <Code className="h-5 w-5 mr-2 text-resume-navy" />
             <span>Skills</span>
@@ -394,15 +435,14 @@ const ResumeForm = ({ resumeData, onChange }: ResumeFormProps) => {
           </AccordionContent>
         </AccordionItem>
 
-        {/* Projects Section */}
-        <AccordionItem value="projects" className="border rounded-md mt-2">
+        <AccordionItem value="projects" className="border rounded-md shadow-sm mt-2">
           <AccordionTrigger className="px-4 py-2 flex items-center">
             <Award className="h-5 w-5 mr-2 text-resume-navy" />
             <span>Projects</span>
           </AccordionTrigger>
           <AccordionContent className="p-4 space-y-4">
             {(resumeData.projects || []).map((proj) => (
-              <div key={proj.id} className="mb-6 p-4 border rounded-md relative">
+              <div key={proj.id} className="mb-6 p-4 border rounded-md relative bg-white shadow-sm">
                 <Button
                   variant="ghost"
                   size="icon"
@@ -451,17 +491,17 @@ const ResumeForm = ({ resumeData, onChange }: ResumeFormProps) => {
                     <div className="space-y-2">
                       <Label>Start Date</Label>
                       <Input
-                        type="date"
                         value={proj.startDate || ''}
                         onChange={(e) => updateProject(proj.id, "startDate", e.target.value)}
+                        placeholder="MM/YYYY"
                       />
                     </div>
                     <div className="space-y-2">
                       <Label>End Date</Label>
                       <Input
-                        type="date"
                         value={proj.endDate || ''}
                         onChange={(e) => updateProject(proj.id, "endDate", e.target.value)}
+                        placeholder="MM/YYYY"
                       />
                     </div>
                   </div>
@@ -475,6 +515,63 @@ const ResumeForm = ({ resumeData, onChange }: ResumeFormProps) => {
             >
               <Plus className="h-4 w-4 mr-2" />
               Add Project
+            </Button>
+          </AccordionContent>
+        </AccordionItem>
+        
+        <AccordionItem value="languages" className="border rounded-md shadow-sm mt-2">
+          <AccordionTrigger className="px-4 py-2 flex items-center">
+            <Globe className="h-5 w-5 mr-2 text-resume-navy" />
+            <span>Languages</span>
+          </AccordionTrigger>
+          <AccordionContent className="p-4 space-y-4">
+            {(resumeData.languages || []).map((language, index) => (
+              <div key={index} className="p-4 border rounded-md relative bg-white shadow-sm">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="absolute top-2 right-2 text-resume-slate/60 hover:text-resume-error"
+                  onClick={() => deleteLanguage(index)}
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>Language</Label>
+                    <Input
+                      value={language.name}
+                      onChange={(e) => updateLanguage(index, "name", e.target.value)}
+                      placeholder="e.g. English, Spanish"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Proficiency</Label>
+                    <Select
+                      value={language.proficiency}
+                      onValueChange={(value) => updateLanguage(index, "proficiency", value)}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select proficiency" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Beginner">Beginner</SelectItem>
+                        <SelectItem value="Intermediate">Intermediate</SelectItem>
+                        <SelectItem value="Advanced">Advanced</SelectItem>
+                        <SelectItem value="Fluent">Fluent</SelectItem>
+                        <SelectItem value="Native">Native</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+              </div>
+            ))}
+            <Button
+              variant="outline"
+              className="w-full mt-2 border-dashed"
+              onClick={addLanguage}
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              Add Language
             </Button>
           </AccordionContent>
         </AccordionItem>
