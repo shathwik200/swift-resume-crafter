@@ -63,25 +63,18 @@ export const exportToPdf = async (elementId: string, filename: string): Promise<
     const srcY = position / imgHeight * canvas.height;
     const srcHeight = heightOnThisPage / imgHeight * canvas.height;
     
-    // Add content to the PDF - fixing the parameter count and type issues
+    // Add content to the PDF
     const canvasDataUrl = canvas.toDataURL('image/png');
     
-    // Use the standard addImage method with only the supported properties
-    // @ts-ignore - Using additional parameters that TypeScript doesn't recognize
-    pdf.addImage({
-      imageData: canvasDataUrl,
-      format: 'PNG',
-      x: 0, // X position
-      y: 0, // Y position (always start at top of new page)
-      width: imgWidth,
-      height: heightOnThisPage,
-      compression: 'FAST',
-      rotation: 0,
-      // These properties aren't in the TypeScript definition but are supported by jsPDF
-      srcY: srcY,
-      srcWidth: canvas.width,
-      srcHeight: srcHeight
-    });
+    // Standard parameters for addImage
+    pdf.addImage(
+      canvasDataUrl, 
+      'PNG', 
+      0, // X position
+      0, // Y position (always start at top of new page)
+      imgWidth, 
+      heightOnThisPage
+    );
     
     // Update position and remaining height
     position += heightOnThisPage;
